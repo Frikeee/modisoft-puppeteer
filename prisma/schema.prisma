@@ -1,0 +1,508 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model product_inventory {
+  id                           Int                 @id @unique(map: "id_UNIQUE") @default(autoincrement())
+  retail_outlets_id            Int
+  item_key                     Int?
+  ups                          String?             @db.VarChar(255)
+  current_rpt_qty              Int?
+  description                  String?             @db.Text
+  item_code                    String?             @db.Text
+  dept_name                    String?             @db.Text
+  size_name                    String?             @db.Text
+  units_per_case               Int?
+  tax_depart                   Int?
+  enum_size_id                 Int?
+  products_package             String?             @db.Text
+  product_group                String?             @db.Text
+  beg_purchase_qty             Int?
+  beg_sold_qty                 Int?
+  beg_adj_qty                  Int?
+  last_adj_qty                 String?             @db.Text
+  last_adj_date                String?             @db.Text
+  commit_count                 Int?
+  commit_date                  String?             @db.Text
+  over_short_qty               Int?
+  ending_inv                   Int?
+  over_short_qty_new           Int?
+  over_short_percent           Int?
+  current_qty                  Int?
+  cost_inventory               Int?
+  retail_inventory             Int?
+  margin                       Int?
+  profit                       Int?
+  min_item_inv                 String?             @db.Text
+  min_inv                      Int?
+  max_inv                      Int?
+  linked_ups                   String?             @db.Text
+  beg_inv                      Int?
+  purchase_qty                 Int?
+  sold_qty                     Int?
+  adj_qty                      Int?
+  rpt_curr_qty                 Int?
+  rpt_stock_cost_by_curr_qty   Int?
+  rpt_stock_retail_by_curr_qty Int?
+  rpt_stock_cost_by_max_qty    Int?
+  rpt_stock_retail_by_max_qty  Int?
+  modified_on                  String?             @db.Text
+  product_inventorycol         Int?
+  product_price_book           product_price_book? @relation(fields: [item_key], references: [item_key], onDelete: NoAction, onUpdate: NoAction, map: "fk_product_inventory_product_price_book1")
+  retail_outlets               retail_outlets      @relation(fields: [retail_outlets_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_product_inventory_retail_outlets1")
+
+  @@index([retail_outlets_id], map: "fk_product_inventory_retail_outlets1_idx")
+}
+
+model product_price_book {
+  item_key                   Int                 @id @unique(map: "item_key_UNIQUE")
+  mpid                       Int?
+  store_name                 String?             @db.Text
+  linked_code                String?             @db.Text
+  item_key_for_column_menu   Int?
+  linked_item_key            Int?
+  vendor                     Int?
+  base_retail                Int?
+  unit_cost_after_disc       Float?              @db.Float
+  unit_rebase                String?             @db.Text
+  last_unit_retail           String?             @db.Text
+  retail_upcharge            String?             @db.Text
+  case_rebate                Int?
+  active_yn                  String?             @db.Text
+  delete                     Int?                @db.TinyInt
+  comments                   String?             @db.Text
+  copy_rebate_yn             String?             @db.Text
+  supplier                   String?             @db.Text
+  order_qty                  String?             @db.Text
+  store_id                   Int?
+  mfg_full_name              Int?
+  rebate_exp                 String?             @db.Text
+  product_type               String?             @db.Text
+  tax_rate_id                Int?
+  unit_of_measure_id         Int?
+  min_age                    Int?
+  allow_food_stamp           Int?                @db.TinyInt
+  is_kitchen_item            Int?                @db.TinyInt
+  is_modifer_item            Int?                @db.TinyInt
+  is_exists_in_promo         Int?                @db.TinyInt
+  is_exists_in_price_group   Int?                @db.TinyInt
+  is_exists_in_category      Int?                @db.TinyInt
+  pack_qty                   Int?
+  retail_changed_on          String?             @db.Text
+  item_weight                Int?
+  scale_type_id              Int?
+  weight_type_id             Int?
+  rewards_category_id        Int?
+  kitchen_print_option       String?             @db.Text
+  size                       String?             @db.Text
+  pgp_name                   String?             @db.Text
+  pct_name                   String?             @db.Text
+  tax_name                   String?             @db.Text
+  min_age_name               String?             @db.Text
+  ingredients                String?             @db.Text
+  unit_cost                  Float?              @db.Float
+  case_coast                 Float?              @db.Float
+  case_discount              Int?
+  unit_retail                Float?              @db.Float
+  case_retail                Float?              @db.Float
+  drive_thru_retail          String?             @db.Text
+  margin                     Float?              @db.Float
+  is_active                  String?             @db.VarChar(255)
+  nacs_category_id           Int?
+  nacs_sub_category_id       Int?
+  is_juul_item               Int?                @db.TinyInt
+  is_cartzie_item            Int?                @db.TinyInt
+  is_cartzie_approved        Int?                @db.TinyInt
+  is_approved_price_change   Int?                @db.TinyInt
+  is_track_cartzie_inventory Int?                @db.TinyInt
+  unit_of_measure_name       String?             @db.Text
+  margin_after_rebate        Int?
+  cartzie_price              String?             @db.Text
+  nacs_category_name         String?             @db.Text
+  nacs_sub_category_name     String?             @db.Text
+  manufacturer               String?             @db.Text
+  str_approval               String?             @db.VarChar(255)
+  item_prep_time             String?             @db.Text
+  max_retail                 Int?
+  modify_date                String?             @db.VarChar(255)
+  f_stamp                    String?             @db.Text
+  nacs_code                  String?             @db.VarChar(255)
+  product_inventory          product_inventory[]
+}
+
+model product_purchases {
+  id                      Int            @id @unique(map: "id_UNIQUE") @default(autoincrement())
+  retail_outlets_id       Int
+  daily_trans_key         Int?
+  payee_name              String?        @db.Text
+  store_name              String?        @db.Text
+  rpt_txn_type            String?        @db.Text
+  date                    DateTime?      @db.Timestamp(0)
+  payee                   Int?
+  shift                   Int?
+  shift_text              String?        @db.Text
+  account_name            Int?
+  reference_or_check_num  String?        @db.VarChar(255)
+  invoice_no              String?        @db.VarChar(255)
+  payment_amount          Float?         @db.Float
+  retail_amount           Float?         @db.Float
+  misc_expenses           Int?
+  transaction_type        Int?
+  table_key               Int?
+  date_for_link           String?        @db.VarChar(255)
+  is_verified             Int?           @db.TinyInt
+  is_purchase_total_match Int?           @db.TinyInt
+  reconcile_yn            Int?           @db.TinyInt
+  reconciles_with_bank_yn Int?           @db.TinyInt
+  is_included_in_payment  Int?           @db.TinyInt
+  purchase_type           String?        @db.Text
+  file_count              Int?
+  process_status          Int?
+  margin                  Float?         @db.Float
+  retail_outlets          retail_outlets @relation(fields: [retail_outlets_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_product_purchases_retail_outlets")
+
+  @@index([retail_outlets_id], map: "fk_product_purchases_retail_outlets_idx")
+}
+
+model retail_outlets {
+  id                    Int                     @id @unique(map: "id_UNIQUE") @default(autoincrement())
+  name                  String                  @db.VarChar(255)
+  user_id               Int
+  product_inventory     product_inventory[]
+  product_purchases     product_purchases[]
+  user                  user                    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_retail_outlets_user")
+  sales_closing         sales_closing[]
+  snapshot_items        snapshot_items[]
+  ebpayroll_employees   ebpayroll_employees[]
+  ebpayroll_timesheet   ebpayroll_timesheet[]
+  ebpayroll_payrollview ebpayroll_payrollview[]
+  ebpayroll_taxes       ebpayroll_taxes[]
+
+  @@index([user_id], map: "fk_retail_outlets_user1_idx")
+}
+
+model user {
+  id             Int              @id @unique(map: "id_UNIQUE") @default(autoincrement())
+  login          String           @db.VarChar(255)
+  password       String           @db.VarChar(255)
+  retail_outlets retail_outlets[]
+}
+
+model sales_closing {
+  id                    Int                     @id @unique(map: "id_UNIQUE")
+  retail_outlets_id     Int
+  order_id              Int?
+  date                  DateTime?               @db.Timestamp(0)
+  tran_date             DateTime?               @db.Timestamp(0)
+  tran_type             String?                 @db.VarChar(255)
+  tender                String?                 @db.VarChar(255)
+  store_name            String?                 @db.VarChar(255)
+  cashier_name          String?                 @db.Text
+  order_status_id       Int?
+  payment_status_id     Int?
+  order_status_text     String?                 @db.Text
+  payment_status_text   String?                 @db.Text
+  server_order_id       Int?
+  device_order_id       Int?
+  has_line_void         Int?                    @db.TinyInt
+  gross_amount          Float?                  @db.Float
+  discount_amount       Int?
+  promotion_amount      Int?
+  tax_net_amount        Float?                  @db.Float
+  net_amount            Float?                  @db.Float
+  tax_sales_amount      Float?                  @db.Float
+  tax_exempt_amount     Float?                  @db.Float
+  cash_back_amount      Float?                  @db.Float
+  tip_amount            Float?                  @db.Float
+  online_charges_amount Float?                  @db.Float
+  store_id              Int?
+  cashier_id            Int?
+  train_id              Int?
+  customer_id           Int?
+  loyalty_no            Int?
+  customer_name         String?                 @db.Text
+  phone_no              String?                 @db.Text
+  pos_register_id       Int?
+  pos_register_no       String?                 @db.Text
+  earned_amount         Float?                  @db.Float
+  redeemed_amount       Float?                  @db.Float
+  coupon_amount         Float?                  @db.Float
+  balance_amount        Float?                  @db.Float
+  transaction_type      String?                 @db.Text
+  change                Float?                  @db.Float
+  given_by_client       Float?                  @db.Float
+  retail_outlets        retail_outlets          @relation(fields: [retail_outlets_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_sales_closing_retail_outlets1")
+  sales_closing_fuel    sales_closing_fuel[]
+  sales_closing_product sales_closing_product[]
+
+  @@index([retail_outlets_id], map: "fk_sales_closing_retail_outlets1_idx")
+}
+
+model snapshot_items {
+  id                Int            @id @unique(map: "id_UNIQUE")
+  retail_outlets_id Int
+  row_id            Int?
+  item_key          Int?
+  s_item_key        Int?
+  prd_department    Int?
+  prd_group         Int?
+  prd_category      Int?
+  units_per_case    Int?
+  ups               String?        @db.VarChar(255)
+  description       String?        @db.Text
+  cost              Float?         @db.Float
+  unit_cost         Float?         @db.Float
+  retail            Float?         @db.Float
+  last_value        Float?         @db.Float
+  sales_price       Float?         @db.Float
+  pb_unit_retail    Float?         @db.Float
+  margin            Float?         @db.Float
+  department        String?        @db.VarChar(255)
+  date_added        DateTime?      @db.Timestamp(0)
+  user_name         String?        @db.VarChar(255)
+  store_id          Int?
+  store_name        String?        @db.Text
+  case_discount     Int?
+  allow_food_stamp  Int?           @db.TinyInt
+  min_age           Int?
+  tax_rate_id       Int?
+  tax_rate          Float?         @db.Float
+  retail_outlets    retail_outlets @relation(fields: [retail_outlets_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_snapshot_items_retail_outlets1")
+
+  @@index([retail_outlets_id], map: "fk_snapshot_items_retail_outlets1_idx")
+}
+
+model sales_closing_fuel {
+  id               Int           @id @unique(map: "id_UNIQUE") @default(autoincrement())
+  gallons          Float?        @db.Float
+  price            Float?        @db.Float
+  amount           Float?        @db.Float
+  sales_closing_id Int
+  sales_closing    sales_closing @relation(fields: [sales_closing_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_sales_closing_fuel_sales_closing1")
+
+  @@index([sales_closing_id], map: "fk_sales_closing_fuel_sales_closing1_idx")
+}
+
+model sales_closing_product {
+  id               Int           @id @unique(map: "trans_id_UNIQUE") @default(autoincrement())
+  quantity         Int?
+  scan_code        String?       @db.VarChar(255)
+  department       String?       @db.VarChar(255)
+  description      String?       @db.Text
+  amount           Float?        @db.Float
+  sales_closing_id Int
+  sales_closing    sales_closing @relation(fields: [sales_closing_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_sales_closing_product_sales_closing1")
+
+  @@index([sales_closing_id], map: "fk_sales_closing_product_sales_closing1_idx")
+}
+
+model ebpayroll_employees {
+  id                           Int            @id @unique(map: "id_UNIQUE")
+  Payee                        String?        @db.VarChar(255)
+  InvoiceByCaseYN              String?        @db.Text
+  ActiveYN                     Boolean?       @db.TinyInt
+  SourceOfRec                  String?        @db.Text
+  EmployeesPayee               Boolean?       @db.TinyInt
+  VendorsPayee                 Boolean?       @db.TinyInt
+  ExpensePayee                 Boolean?       @db.TinyInt
+  WithdrawalPayee              Boolean?       @db.TinyInt
+  DefaultMarkup                String?        @db.Text
+  SSNo                         String?        @db.Text
+  Address                      String?        @db.Text
+  SSMA_TimeStamp               DateTime?      @db.Timestamp(0)
+  StoreId                      Int?           @db.Int
+  City                         String?        @db.Text
+  State                        String?        @db.Text
+  ZIP                          String?        @db.Text
+  HourlyPay                    Float?         @db.Float
+  OvertimePay                  Float?         @db.Float
+  Allowances                   String?        @db.Text
+  AddFedTax                    String?        @db.Text
+  CheckBox2C                   String?        @db.Text
+  DependentsClaimed            String?        @db.Text
+  OtherIncomeAmount            String?        @db.Text
+  DeductionsAmount             String?        @db.Text
+  FilingStatus                 String?        @db.Text
+  PrintYNSSN                   String?        @db.Text
+  PrintPayRateYN               Boolean?       @db.TinyInt
+  PrintPayHoursYN              Boolean?       @db.TinyInt
+  IsFingerPrintLoginOnly       Boolean?       @db.TinyInt
+  IsOverTimeEnabled            Boolean?       @db.TinyInt
+  IsDoubleOverTimeEnabled      Boolean?       @db.TinyInt
+  IsSickPayEnabled             Boolean?       @db.TinyInt
+  IsVacationPayEnabled         Boolean?       @db.TinyInt
+  IsHolidayPayEnabled          Boolean?       @db.TinyInt
+  IsBonusPayEnabled            Boolean?       @db.TinyInt
+  IsCommissionPayEnabled       Boolean?       @db.TinyInt
+  DOB                          String?        @db.Text
+  HomePhone                    String?        @db.VarChar(255)
+  CellPhone                    String?        @db.VarChar(255)
+  Note                         String?        @db.Text
+  ProductType                  String?        @db.Text
+  TaxDepart                    Int?           @db.Int
+  Email                        String?        @db.VarChar(255)
+  HireDate                     DateTime?      @db.DateTime(0)
+  TermDate                     DateTime?      @db.DateTime(0)
+  PaySchedule                  Float?         @db.Float
+  salary                       Float?         @db.Float
+  PayRate                      Float?         @db.Float
+  PayRateText                  String?        @db.Text
+  PayText                      String?        @db.Text
+  PrintActiveYN                Boolean?       @db.TinyInt
+  Address2                     String?        @db.Text
+  contact                      String?        @db.VarChar(255)
+  FaxNum                       Int?           @db.Int
+  AccountNum                   Int?           @db.Int
+  PayMethod                    String?        @db.VarChar(255)
+  POSCashierID                 Int?           @db.Int
+  payEndDay                    Int?           @db.Int
+  EmpId                        Int?           @db.Int
+  EmpIdNo                      Int?           @db.Int
+  ChildSpouseSupportDesc       String?        @db.Text
+  ChildSpouseSupportAmount     Float?         @db.Float
+  ChildSpouseSupportExpCat     Int?           @db.Int
+  OtherGarnishmentDesc         String?        @db.Text
+  OtherGarnishmentAmount       Float?         @db.Float
+  OtherGarnishmentExpCat       Int?           @db.Int
+  HealthInsuranceDesc          String?        @db.Text
+  HealthInsuranceAmount        Float?         @db.Float
+  HealthInsuranceExpCat        Int?           @db.Int
+  OtherDeductionsDesc          String?        @db.Text
+  OtherDeductionsAmount        Float?         @db.Float
+  OtherDeductionsExpCat        Int?           @db.Int
+  CashAdvanceRepaymentDesc     String?        @db.Text
+  CashAdvanceRepaymentAmount   Float?         @db.Float
+  CashAdvanceRepaymentExpCat   Int?           @db.Int
+  StateTaxDesc                 String?        @db.Text
+  StateTaxAmount               Float?         @db.Float
+  StateTaxExpCat               Int?           @db.Int
+  DoubleOvertimePay            Float?         @db.Float
+  SickPay                      Float?         @db.Float
+  SickPayHoursEarnedYearly     Float?         @db.Float
+  SickPayMaxAllowedHours       Float?         @db.Float
+  VacationPay                  Float?         @db.Float
+  VacationPayHoursEarnedYearly Float?         @db.Float
+  VacationPayMaxAllowedHours   Float?         @db.Float
+  HolidayPay                   Float?         @db.Float
+  Bonus                        Float?         @db.Float
+  Commission                   Float?         @db.Float
+  MonStartTime                 DateTime?      @db.DateTime(0)
+  MonEndTime                   DateTime?      @db.DateTime(0)
+  TueStartTime                 DateTime?      @db.DateTime(0)
+  TueEndTime                   DateTime?      @db.DateTime(0)
+  WedStartTime                 DateTime?      @db.DateTime(0)
+  WedEndTime                   DateTime?      @db.DateTime(0)
+  ThuStartTime                 DateTime?      @db.DateTime(0)
+  ThuEndTime                   DateTime?      @db.DateTime(0)
+  FriStartTime                 DateTime?      @db.DateTime(0)
+  FriEndTime                   DateTime?      @db.DateTime(0)
+  SatStartTime                 DateTime?      @db.DateTime(0)
+  SatEndTime                   DateTime?      @db.DateTime(0)
+  SunStartTime                 DateTime?      @db.DateTime(0)
+  SunEndTime                   DateTime?      @db.DateTime(0)
+  StrMonStartTime              String?        @db.Text
+  StrMonEndTime                String?        @db.Text
+  StrTueStartTime              String?        @db.Text
+  StrTueEndTime                String?        @db.Text
+  StrWedStartTime              String?        @db.Text
+  StrWedEndTime                String?        @db.Text
+  StrThuStartTime              String?        @db.Text
+  StrThuEndTime                String?        @db.Text
+  StrFriStartTime              String?        @db.Text
+  StrFriEndTime                String?        @db.Text
+  StrSatStartTime              String?        @db.Text
+  StrSatEndTime                String?        @db.Text
+  StrSunStartTime              String?        @db.Text
+  StrSunEndTime                String?        @db.Text
+  EmployeeUserMapID            Int?           @db.Int
+  IsScheduleAdmin              Boolean?       @db.TinyInt
+  EmpActiveID                  Int?           @db.Int
+  EmpEndReason                 String?        @db.Text
+  retail_outlets_id            Int
+  retail_outlets               retail_outlets @relation(fields: [retail_outlets_id], references: [id])
+}
+
+model ebpayroll_timesheet {
+  TimeSheetID              Int            @id @unique(map: "TimeSheetID_UNIQUE")
+  PayeeID                  Int?           @db.Int
+  PayeeName                String?        @db.VarChar(255)
+  StartTime                String?        @db.VarChar(255)
+  EndTime                  String?        @db.VarChar(255)
+  EndTimeNew               String?        @db.VarChar(255)
+  IsBothTimeSame           Boolean?       @db.TinyInt
+  PayHour                  Float?         @db.Float
+  PayHourString            String?        @db.VarChar(255)
+  ScheduleInTime           String?        @db.VarChar(255)
+  ScheduleOutTime          String?        @db.VarChar(255)
+  IsInTimeFlag             Boolean?       @db.TinyInt
+  IsOutTimeFlag            Boolean?       @db.TinyInt
+  StoreId                  Int?           @db.Int
+  EnumEntryTypeID          Int?           @db.Int
+  TimeOffID                Int?           @db.Int
+  ScheduleID               Int?           @db.Int
+  TimeSheetTypeId          String?        @db.VarChar(255)
+  UniqueTimeSheetId        String?        @db.VarChar(255)
+  IsSystemUpdatedTimeSheet Boolean?       @db.TinyInt
+  retail_outlets_id        Int
+  retail_outlets           retail_outlets @relation(fields: [retail_outlets_id], references: [id])
+}
+
+model ebpayroll_payrollview {
+  TxnID                   Int            @id @unique(map: "TxnID_UNIQUE")
+  EmpID                   Int?           @db.Int
+  EmployeeName            String?        @db.VarChar(255)
+  EmployeeNumber          String?        @db.VarChar(255)
+  SSN                     String?        @db.VarChar(255)
+  BankAccount             Int?           @db.Int
+  CheckNo                 String?        @db.VarChar(255)
+  IsReconciled            Boolean?       @db.TinyInt
+  CheckDate               String?        @db.VarChar(255)
+  StartDate               String?        @db.VarChar(255)
+  EndDate                 String?        @db.VarChar(255)
+  RegularHours            Float?         @db.Float
+  RegularRate             Float?         @db.Float
+  IsOverTimeEnabled       Boolean?       @db.TinyInt
+  OverTimeHours           Float?         @db.Float
+  OverTimeRate            Float?         @db.Float
+  IsDoubleOverTimeEnabled Boolean?       @db.TinyInt
+  DoubleOverTimeHours     Float?         @db.Float
+  DoubleOverTimeRate      Float?         @db.Float
+  IsSickPayEnabled        Boolean?       @db.TinyInt
+  SickPayHours            Float?         @db.Float
+  SickPayRate             Float?         @db.Float
+  IsVacationPayEnabled    Boolean?       @db.TinyInt
+  VacationPayHours        Float?         @db.Float
+  VacationPayRate         Float?         @db.Float
+  IsHolidayPayEnabled     Boolean?       @db.TinyInt
+  HolidayPayHours         Float?         @db.Float
+  HolidayPayRate          Float?         @db.Float
+  IsBonusPayEnabled       Boolean?       @db.TinyInt
+  BonusAmount             Float?         @db.Float
+  IsCommissionPayEnabled  Boolean?       @db.TinyInt
+  CommissionAmount        Float?         @db.Float
+  TipAmount               Float?         @db.Float
+  SalaryAmount            Int?           @db.Int
+  GrossAmount             Float?         @db.Float
+  OverTimeAmount          Float?         @db.Float
+  NetPay                  Float?         @db.Float
+  StoreID                 Int?           @db.Int
+  StoreName               String?        @db.VarChar(255)
+  retail_outlets_id       Int
+  retail_outlets          retail_outlets @relation(fields: [retail_outlets_id], references: [id])
+}
+
+model ebpayroll_taxes {
+  id                Int            @id @unique(map: "id_UNIQUE") @default(autoincrement())
+  MonthYear         String?        @db.VarChar(255)
+  SocialSecTax      Float?         @db.Float
+  MedTax            Float?         @db.Float
+  FederalTax        Float?         @db.Float
+  Total             Float?         @db.Float
+  retail_outlets_id Int
+  retail_outlets    retail_outlets @relation(fields: [retail_outlets_id], references: [id])
+}
