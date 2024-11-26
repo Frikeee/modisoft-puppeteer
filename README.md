@@ -14,4 +14,3 @@
 ## P.s
 - The script execution time is about 8 hours.
 - It is advisable not to perform any actions on the site while the script is running.
-- **Every time the script is run again, the json files and database are erased and overwritten, so please save them if necessary.**
