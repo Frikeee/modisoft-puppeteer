@@ -4,7 +4,7 @@
 # Pre-Requirements
 - Node.js
 - MySQL
-- MySQL Workbench - if you need to generate er diagram
+- MySQL Workbench - if you need to generate ER diagram
 
 # Database setup instructions
 - After copying the project, type ‘npm i’  in the project root to install all dependencies
