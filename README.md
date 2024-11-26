@@ -1,8 +1,13 @@
 # Important information
 - **Every time the script is run again, the json files and database are erased and overwritten, so please save them if necessary.**
 
+# Pre-Requirements
+- Node.js
+- MySQL
+- MySQL Workbench - if you need to generate er diagram
+
 # Database setup instructions
-- After copying the project, type 'npm i' to install all dependencies
+- After copying the project, type ‘npm i’  in the project root to install all dependencies
 - Create a '.env' file similar to '.env.example'
 - Change the fragments 'userName', 'password', 'dbName' in the variable 'DATABASE_URL' of the file '.env'
 - Apply the migration with the command 'npx prisma db push'
