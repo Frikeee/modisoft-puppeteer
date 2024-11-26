@@ -19,7 +19,8 @@ export const getDataSnapShotItems = async (page, retailOutletId) => {
         page,
         'GetVerifyItemsData',
         fileName,
-        retailOutletId
+        retailOutletId,
+        '#GridItemsChangeLog > div > a.k-link.k-pager-nav:nth-child(5)'
     );
 
     await closeJsonFile(fileName);

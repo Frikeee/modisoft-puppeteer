@@ -18,21 +18,27 @@ export const getDataProductInventory = async (page, retailOutletId) => {
 
     await delay(1000)
 
-    await clickSelector(page, '.daterangepicker > .ranges > ul > li:first-child', '.daterangepicker')
+    await clickSelector(page, 'xpath///li[@data-range-key="All Dates"]', '.daterangepicker')
 
     await saveToJSON(await selectMaxValuePerPageOnInventory(page), fileName, retailOutletId);
 
-    await paginationCrawler(page, '_SelectInventory', fileName, retailOutletId);
+    await paginationCrawler(
+        page,
+        '_SelectInventory',
+        fileName,
+        retailOutletId,
+        '#grdPriceLog > div > a.k-link.k-pager-nav:nth-child(5)'
+        );
 
     await closeJsonFile(fileName);
 }
 
 const selectMaxValuePerPageOnInventory = async (page) => {
-    let id = await page.$eval('.k-pager-sizes.k-label > .k-widget.k-dropdown', (element) => element.getAttribute('aria-controls'));
+    await page.click('xpath///span/span[@role="option" and text()=\'10\']')
 
-    await page.click('.k-pager-sizes.k-label > .k-widget > .k-dropdown-wrap')
+    await console.log(`<- wait page click`)
 
     return await getFirstPageData(page, '_SelectInventory',
-        `#${id} > li:last-child`,
-        `#${id}`);
+        `xpath///div/ul/li[@role="option" and @data-offset-index="5" and text()=\'100\']`,
+        `div.k-animation-container`);
 }

@@ -1,5 +1,6 @@
 import {closeJsonFile, createToJSON, saveToJSON} from "../saveToJSON.js";
 import {getFirstPageData, paginationCrawler} from "../page-table-crawler.js";
+import {delay} from "../index.js";
 
 
 export const getDataProductPriceBook = async (page, retailOutletId) => {
@@ -14,16 +15,25 @@ export const getDataProductPriceBook = async (page, retailOutletId) => {
 
     await saveToJSON(await selectMaxValuePerPageOnPriceBook(page), fileName, retailOutletId);
 
-    await paginationCrawler(page, '_SelectAjaxVendorsItems', fileName, retailOutletId);
+    await paginationCrawler(
+        page,
+        '_SelectAjaxVendorsItems',
+        fileName,
+        retailOutletId,
+        '#VendorsItems > div:nth-child(3) > a:nth-child(5)'
+    );
 
     await closeJsonFile(fileName);
 }
 
 const selectMaxValuePerPageOnPriceBook = async (page) => {
-    let id = await page.$eval('div:nth-child(3) > .k-pager-sizes.k-label > .k-widget.k-dropdown', (element) => element.getAttribute('aria-controls'));
-    await page.click('div:nth-child(3) > .k-pager-sizes.k-label > .k-widget.k-dropdown > .k-dropdown-wrap.k-state-default')
+    let id = await page.$eval('xpath///span/span[@role="listbox" and @aria-haspopup="listbox"]', (element) => element.getAttribute('aria-controls'));
+
+    await page.click('xpath///span/span[@role="option" and text()=\'100\']')
+
+    await delay(1000);
 
     return await getFirstPageData(page, '_SelectAjaxVendorsItems',
-        `#${id} > li:last-child`,
-        `#${id}`);
+        `#${await id} > li:last-child`,
+        `#${await id}`);
 }

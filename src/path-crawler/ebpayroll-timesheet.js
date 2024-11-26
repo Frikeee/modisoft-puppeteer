@@ -20,7 +20,13 @@ export const getDataEbpayrollTimesheet = async (page, retailOutletId) => {
 
     await saveToJSON(await selectMaxValuePerPageOnTimesheet(page), fileName, retailOutletId);
 
-    await paginationCrawler(page, '_SelectTimeSheet', fileName, retailOutletId);
+    await paginationCrawler(
+        page,
+        '_SelectTimeSheet',
+        fileName,
+        retailOutletId,
+        '#GrdEmp > div > a.k-link.k-pager-nav:nth-child(5)'
+    );
 
     await closeJsonFile(fileName);
 }

@@ -1,31 +1,36 @@
 import {saveToJSON} from "./saveToJSON.js";
-import {clickSelector} from "./click-events.js";
 import {getDetailInfoCheck} from "./path-crawler/sales-closing.js";
+import {delay} from "./index.js";
 
-export const getFirstPageData = async (page, url, buttonTrigger, selector) => {
+export const getFirstPageData = async (page, url, buttonTrigger) => {
+    await delay(1000);
     console.log('Current page: 1')
     const [response] = await Promise.all([
         page.waitForResponse(async (response) => {
             return response.url().includes(url);
         }, {timeout: 30000}),
-        clickSelector(page, buttonTrigger, selector)
+        page.click(buttonTrigger)
     ]);
     return JSON.parse(await response.text())["Data"];
 }
 
-export const paginationCrawler = async (page, url, fileName, retailOutletId) => {
-    let nextPageButton = await page.$eval('xpath///a[@aria-label="Go to the next page"]', (element) => element.className);
+export const paginationCrawler = async (page, url, fileName, retailOutletId, nextButton) => {
+    let nextPageButton = await page.$eval(nextButton, (element) => element.className);
     let pageButtonPrevNumber = 1;
     while (!nextPageButton.includes('k-state-disabled')) {
-        pageButtonPrevNumber += await getBodyTable(page, pageButtonPrevNumber, url,  fileName, retailOutletId);
+        try {
+            pageButtonPrevNumber += await getBodyTable(page, pageButtonPrevNumber, url,  fileName, retailOutletId, nextButton);
+        } catch (e) {
+            pageButtonPrevNumber += await getBodyTable(page, pageButtonPrevNumber, url,  fileName, retailOutletId, nextButton);
+        }
         if (fileName === 'sales_closing'){
             await getDetailInfoCheck(page);
         }
-        nextPageButton = await page.$eval('xpath///a[@aria-label="Go to the next page"]', (element) => element.className);
+        nextPageButton = await page.$eval(nextButton, (element) => element.className);
     }
 }
 
-export const getBodyTable = async (page, pageButtonPrevNumber, url, fileName, retailOutletId) => {
+export const getBodyTable = async (page, pageButtonPrevNumber, url, fileName, retailOutletId, nextButton) => {
     let currenPage;
     const [response] = await Promise.all([
         page.waitForResponse(async (response) => {
@@ -35,7 +40,7 @@ export const getBodyTable = async (page, pageButtonPrevNumber, url, fileName, re
                 return response.url().includes(url);
             }
         }),
-        page.click('xpath///a[@aria-label="Go to the next page"]')
+        page.click(nextButton)
     ]);
     const data = JSON.parse(await response.text())["Data"];
     console.log('Current page: ' + currenPage)

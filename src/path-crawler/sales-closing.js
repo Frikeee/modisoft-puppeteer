@@ -23,6 +23,8 @@ export const getDataSalesClosing = async (page, retailOutletId) => {
 
     await clickDateSelector(page, '_SelectTransactionRange', '.daterangepicker > .ranges > ul > li:nth-child(12)')
 
+    await delay(3000);
+
     await saveToJSON(await selectMaxValuePerPageOnSalesClosing(page), fileName, retailOutletId);
 
     await getDetailInfoCheck(page);
@@ -31,7 +33,8 @@ export const getDataSalesClosing = async (page, retailOutletId) => {
         page,
         '_SelectTransactionRange',
         fileName,
-        retailOutletId
+        retailOutletId,
+        '#GridTrans > div > a.k-link.k-pager-nav:nth-child(4)'
     );
 
     await closeJsonFile(fileName);
@@ -62,7 +65,7 @@ export const getDetailInfoCheck = async (page) => {
             await clickSelector(page, `#GridTrans > table > tbody > tr:nth-child(${i}) > td:last-child > a`, '#ha-drawer > .drawer-panel')
             await getHTMLDetails(page, checkId);
             await clickSelector(page, '#btnClosePop', '.ha-drawer-large.hide')
-            await delay(200)
+            await delay(210)
         }
     }
 }

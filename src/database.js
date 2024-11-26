@@ -539,5 +539,6 @@ export const clearDB = async () => {
     await prisma.ebpayroll_employees.deleteMany();
     await prisma.ebpayroll_timesheet.deleteMany();
     await prisma.ebpayroll_payrollview.deleteMany();
+    await prisma.ebpayroll_taxes.deleteMany();
 }
 

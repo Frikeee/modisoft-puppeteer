@@ -22,7 +22,12 @@ export const getDataProductPurchases = async (page, retailOutletId) => {
 
     await saveToJSON(await selectMaxValuePerPageOnPurchases(page), fileName, retailOutletId);
 
-    await paginationCrawler(page, '_SelectAjaxEntries', fileName, retailOutletId);
+    await paginationCrawler(
+        page,
+        '_SelectAjaxEntries',
+        fileName,
+        retailOutletId,
+        '#StoreEntries > div > a.k-link.k-pager-nav:nth-child(5)');
 
     await closeJsonFile(fileName);
 }
